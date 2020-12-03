@@ -25,15 +25,21 @@ using namespace ctre::phoenix::motorcontrol::can;
 TalonSRX talLeft(1);
 TalonSRX talRght(0);
 
-talLeft.ConfigSelectedFeedbackSensor(...); // TODO: finish filling out, though it may be unnecessary.
+talLeft.ConfigSelectedFeedbackSensor(1); // TODO: This is the number for the IntegratedEncoder, might be incorrect?
+talRight.ConfigSelectedFeedbackSensor(1);
 
 int kPIDLoopIdx = 0;
 int kTimeoutMs = 30;
 
-talLeft.Config_kF(kPIDLoopIdx, 0, kTimeoutMs); // TODO: Tune PIDF values according to https://phoenix-documentation.readthedocs.io/en/latest/ch16_ClosedLoop.html.
-talLeft.Config_kP(kPIDLoopIdx, 0, kTimeoutMs); // CHECK WHILE TESTING: this might have to be moved to main, alongside the ConfigSelectedFeedbackSensor()
-talLeft.Config_kI(kPIDLoopIdx, 0, kTimeoutMs);
-talLeft.Config_kD(kPIDLoopIdx, 0, kTimeoutMs);
+void configPIDF(TalonSRX talon, double P, double I, double D, double F){
+  talon.Config_kF(kPIDLoopIdx, P, kTimeoutMs); // TODO: Tune PIDF values according to https://phoenix-documentation.readthedocs.io/en/latest/ch16_ClosedLoop.html.
+  talon.Config_kP(kPIDLoopIdx, I, kTimeoutMs); // CHECK WHILE TESTING: this might have to be moved to main, alongside the ConfigSelectedFeedbackSensor()
+  talon.Config_kI(kPIDLoopIdx, D, kTimeoutMs);
+  talon.Config_kD(kPIDLoopIdx, F, kTimeoutMs);
+}
+
+configPIDF(talLeft, 0, 0, 0, 0);
+configPIDF(talRight, 0, 0, 0, 0);
 
 void initDrive()
 {
